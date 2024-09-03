@@ -92,7 +92,7 @@ let print_tape tape =
   print_lst @@ rev tape.left;
   print_color tape.current;
   print_lst tape.right;
-  print_char '\n'
+  print_char ' '
 
 
 let step machine =
@@ -106,9 +106,8 @@ let step machine =
         state = act.to_state}
 
 let examine machine = 
-  (* print_endline machine.state; *)
   print_tape machine.tape;
-  (* {machine with state = "HALT"} *)
+  print_endline machine.state; 
   machine
 
 let rec run machine =
@@ -172,4 +171,4 @@ let () =
   else
     let machine =  machine_of_json_file Sys.argv.(1) Sys.argv.(2) in
     let final_machine = run machine in
-    print_tape final_machine.tape
+    ignore @@ examine final_machine;
