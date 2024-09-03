@@ -1,3 +1,7 @@
+open Yojson.Basic.Util
+open Sys
+open Arg
+
 module StringMap = Map.Make(String)
 module CharMap = Map.Make(Char)
 
@@ -101,7 +105,6 @@ let rec run machine =
 
 
 (* JSON PARSING *)
-open Yojson.Basic.Util
 
 let char_of_string s =
   if String.length s = 1 then s.[0]
@@ -129,24 +132,30 @@ let parse_transition_map json =
     StringMap.add state action_map acc
   ) StringMap.empty
 
-let machine_of_json json = 
+let machine_of_json json input = 
   let blank = json |> member "blank" |> to_string |> char_of_string in
   let init_state = json |> member "initial" |> to_string in
   let halt_state = json |> member "finals" |> to_list |> List.map to_string in
   let transition_map = json |> member "transitions" |> parse_transition_map in
   {
-    tape = tape_of_str blank "111-11=";
+    tape = tape_of_str blank input;
     transition_map = transition_map;
     state = init_state;
     halting_state = halt_state;
   }
 
-let machine_of_json_file filename = 
+let machine_of_json_file filename input = 
   let json = Yojson.Basic.from_file filename in
-  machine_of_json json
+  machine_of_json json input
 
 
 let () =
-  let machine =  machine_of_json_file "sub.json" in
-  let final_machine = run machine in
-  print_tape final_machine.tape
+  if Array.length Sys.argv <> 3 then
+    begin
+    Printf.printf "Usage: %s <file.json> <tape_input>\n" Sys.argv.(0);
+    exit 1
+    end
+  else
+    let machine =  machine_of_json_file Sys.argv.(1) Sys.argv.(2) in
+    let final_machine = run machine in
+    print_tape final_machine.tape
