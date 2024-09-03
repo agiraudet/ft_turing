@@ -24,6 +24,9 @@ type action_map = action CharMap.t
 type transition_map = action_map StringMap.t
 
 type machine = {
+  (* name: string; *)
+  (* alphabet: char list; *)
+  (* state_list: string list; *)
   tape: char tape;
   transition_map: transition_map;
   state: string;
@@ -65,10 +68,21 @@ let move tape direction =
   | Left -> move_left tape
   | Right -> move_right tape
 
+(* let print_color c =  *)
+(*   let yellow = "\027[33m" in *)
+(*   let reset = "\027[0m" in *)
+(*   Printf.printf "%s%c%s" yellow c reset *)
+
+(* let print_color c =  *)
+(*   let bold = "\027[1m" in *)
+(*   let underline = "\027[4m" in *)
+(*   let reset = "\027[0m" in *)
+(*   Printf.printf "%s%s%c%s" bold underline c reset *)
+
 let print_color c = 
-  let yellow = "\027[33m" in
+  let inverse = "\027[7m" in
   let reset = "\027[0m" in
-  Printf.printf "%s%c%s" yellow c reset
+  Printf.printf "%s%c%s" inverse c reset
 
 let print_tape tape = 
   let rec print_lst = function
