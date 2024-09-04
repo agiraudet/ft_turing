@@ -1,0 +1,92 @@
+{
+  "name": "mov",
+  "alphabet": [
+    "0",
+    "1",
+    "#",
+    "."
+  ],
+  "blank": ".",
+  "states": [
+    "find_value_right",
+    "mov_1_right",
+    "mov_0_right",
+    "mov_1_left",
+    "mov_0_left",
+    "HALT"
+  ],
+  "initial": "find_value_rigth",
+  "finals": [
+    "HALT"
+  ],
+  "transitions": {
+    "find_value_right": [
+      {
+        "read": ".",
+        "to_state": "find_value_right",
+        "write": ".",
+        "action": "RIGHT"
+      },
+      {
+        "read": "1",
+        "to_state": "scanright",
+        "write": "1",
+        "action": "RIGHT"
+      },
+      {
+        "read": "-",
+        "to_state": "scanright",
+        "write": "-",
+        "action": "RIGHT"
+      },
+      {
+        "read": "=",
+        "to_state": "eraseone",
+        "write": ".",
+        "action": "LEFT"
+      }
+    ],
+    "eraseone": [
+      {
+        "read": "1",
+        "to_state": "subone",
+        "write": "=",
+        "action": "LEFT"
+      },
+      {
+        "read": "-",
+        "to_state": "HALT",
+        "write": ".",
+        "action": "LEFT"
+      }
+    ],
+    "subone": [
+      {
+        "read": "1",
+        "to_state": "subone",
+        "write": "1",
+        "action": "LEFT"
+      },
+      {
+        "read": "-",
+        "to_state": "skip",
+        "write": "-",
+        "action": "LEFT"
+      }
+    ],
+    "skip": [
+      {
+        "read": ".",
+        "to_state": "skip",
+        "write": ".",
+        "action": "LEFT"
+      },
+      {
+        "read": "1",
+        "to_state": "scanright",
+        "write": ".",
+        "action": "RIGHT"
+      }
+    ]
+  }
+}

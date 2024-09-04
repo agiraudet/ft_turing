@@ -1,3 +1,3 @@
 #!/bin/sh
 
-ocamlfind ocamlopt -linkpkg -package yojson turing.ml
+ocamlfind ocamlopt -linkpkg -package yojson turing.ml -o tm
