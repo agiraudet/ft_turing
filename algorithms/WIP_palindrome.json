@@ -6,19 +6,100 @@
     "c",
     "y",
     "n",
-    "."
+    ".",
+    "="
   ],
   "blank": ".",
   "states": [
+    "mark_end_of_tape",
+    "mark_start_of_tape",
     "go_left_to_dot",
     "go_right_to_dot",
     "HALT"
   ],
-  "initial": "first_zero",
+  "initial": "mark_start_of_tape",
   "finals": [
     "HALT"
   ],
   "transitions": {
+    "mark_start_of_tape": [
+      {
+        "read": "a",
+        "to_state": "mark_start_of_tape",
+        "write": "a",
+        "action": "LEFT"
+      },
+      {
+        "read": "b",
+        "to_state": "mark_start_of_tape",
+        "write": "b",
+        "action": "LEFT"
+      },
+      {
+        "read": "c",
+        "to_state": "mark_start_of_tape",
+        "write": "c",
+        "action": "LEFT"
+      },
+      {
+        "read": ".",
+        "to_state": "mark_end_of_tape",
+        "write": "=",
+        "action": "RIGHT"
+      }
+    ],
+    "mark_end_of_tape": [
+      {
+        "read": "a",
+        "to_state": "mark_end_of_tape",
+        "write": "a",
+        "action": "RIGHT"
+      },
+      {
+        "read": "b",
+        "to_state": "mark_end_of_tape",
+        "write": "b",
+        "action": "RIGHT"
+      },
+      {
+        "read": "c",
+        "to_state": "mark_end_of_tape",
+        "write": "c",
+        "action": "RIGHT"
+      },
+      {
+        "read": ".",
+        "to_state": "pick_letter",
+        "write": "=",
+        "action": "LEFT"
+      }
+    ],
+    "end_y": [
+      {
+        "read": "a",
+        "to_state": "go_left_to_a",
+        "write": "a",
+        "action": "RIGHT"
+      },
+      {
+        "read": "b",
+        "to_state": "go_left_to_b",
+        "write": "b",
+        "action": "LEFT"
+      },
+      {
+        "read": "c",
+        "to_state": "go_left_to_c",
+        "write": "c",
+        "action": "LEFT"
+      },
+      {
+        "read": "=",
+        "to_state": "end_y",
+        "write": ".",
+        "action": "RIGHT"
+      }
+    ],
     "pick_letter": [
       {
         "read": "a",
@@ -39,8 +120,8 @@
         "action": "LEFT"
       },
       {
-        "read": ".",
-        "to_state": "pick_letter",
+        "read": "=",
+        "to_state": "end_y",
         "write": ".",
         "action": "RIGHT"
       }
