@@ -1,0 +1,51 @@
+{
+  "name": "on1n",
+  "alphabet": [
+    "0",
+    "1",
+    "y",
+    "n",
+    "."
+  ],
+  "blank": ".",
+  "states": [
+    "find_zero",
+    "find_one",
+    "HALT"
+  ],
+  "initial": "find_one",
+  "finals": [
+    "HALT"
+  ],
+  "transitions": {
+    "find_zero": [
+      {
+        "read": "0",
+        "to_state": "second_zero",
+        "write": ".",
+        "action": "RIGHT"
+      },
+      {
+        "read": ".",
+        "to_state": "HALT",
+        "write": "y",
+        "action": "LEFT"
+      }
+    ],
+    "find_one": [
+      {
+        "read": "0",
+        "to_state": "find_one",
+        "write": "0",
+        "action": "RIGHT"
+      },
+      {
+        "read": "1",
+        "to_state": "find_zero",
+        "write": "n",
+        "action": "LEFT"
+      }
+    ],
+    "skip_left": []
+  }
+}
