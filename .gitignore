@@ -3,3 +3,4 @@ a.out
 *.cmi
 *.cmx
 *.o
+tmp

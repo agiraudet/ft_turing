@@ -1,0 +1,263 @@
+{
+  "name": "Minsky's UTM",
+  "alphabet": [
+    "0",
+    "y",
+    "1",
+    "y",
+    "A"
+  ],
+  "blank": "0",
+  "states": [
+    "q1",
+    "q2",
+    "q3",
+    "q4",
+    "q5",
+    "q6",
+    "q7",
+    "HALT",
+    "INIT_A",
+    "INIT_B"
+  ],
+  "initial": "INIT_A",
+  "finals": [
+    "HALT"
+  ],
+  "transitions": {
+    "INIT_A": [
+      {
+        "read": "y",
+        "to_state": "INIT_B",
+        "write": "y",
+        "action": "LEFT"
+      },
+      {
+        "read": "0",
+        "to_state": "INIT_A",
+        "write": "0",
+        "action": "RIGHT"
+      },
+      {
+        "read": "1",
+        "to_state": "INIT_A",
+        "write": "1",
+        "action": "RIGHT"
+      },
+      {
+        "read": "A",
+        "to_state": "INIT_A",
+        "write": "A",
+        "action": "RIGHT"
+      }
+    ],
+    "INIT_B": [
+      {
+        "read": "y",
+        "to_state": "q2",
+        "write": "y",
+        "action": "RIGHT"
+      },
+      {
+        "read": "0",
+        "to_state": "q2",
+        "write": "0",
+        "action": "RIGHT"
+      },
+      {
+        "read": "1",
+        "to_state": "q2",
+        "write": "1",
+        "action": "RIGHT"
+      },
+      {
+        "read": "A",
+        "to_state": "q2",
+        "write": "A",
+        "action": "RIGHT"
+      }
+    ],
+    "q1": [
+      {
+        "read": "y",
+        "to_state": "q1",
+        "write": "0",
+        "action": "LEFT"
+      },
+      {
+        "read": "0",
+        "to_state": "q1",
+        "write": "0",
+        "action": "LEFT"
+      },
+      {
+        "read": "1",
+        "to_state": "q2",
+        "write": "1",
+        "action": "LEFT"
+      },
+      {
+        "read": "A",
+        "to_state": "q1",
+        "write": "1",
+        "action": "LEFT"
+      }
+    ],
+    "q2": [
+      {
+        "read": "y",
+        "to_state": "q1",
+        "write": "0",
+        "action": "LEFT"
+      },
+      {
+        "read": "0",
+        "to_state": "q2",
+        "write": "y",
+        "action": "RIGHT"
+      },
+      {
+        "read": "1",
+        "to_state": "q2",
+        "write": "A",
+        "action": "RIGHT"
+      },
+      {
+        "read": "A",
+        "to_state": "q6",
+        "write": "y",
+        "action": "RIGHT"
+      }
+    ],
+    "q3": [
+      {
+        "read": "y",
+        "to_state": "q3",
+        "write": "y",
+        "action": "LEFT"
+      },
+      {
+        "read": "0",
+        "to_state": "HALT",
+        "write": "0",
+        "action": "LEFT"
+      },
+      {
+        "read": "1",
+        "to_state": "q3",
+        "write": "A",
+        "action": "LEFT"
+      },
+      {
+        "read": "A",
+        "to_state": "q4",
+        "write": "1",
+        "action": "LEFT"
+      }
+    ],
+    "q4": [
+      {
+        "read": "y",
+        "to_state": "q4",
+        "write": "y",
+        "action": "LEFT"
+      },
+      {
+        "read": "0",
+        "to_state": "q5",
+        "write": "y",
+        "action": "RIGHT"
+      },
+      {
+        "read": "1",
+        "to_state": "q7",
+        "write": "1",
+        "action": "LEFT"
+      },
+      {
+        "read": "A",
+        "to_state": "q4",
+        "write": "1",
+        "action": "LEFT"
+      }
+    ],
+    "q5": [
+      {
+        "read": "y",
+        "to_state": "q5",
+        "write": "y",
+        "action": "RIGHT"
+      },
+      {
+        "read": "0",
+        "to_state": "q3",
+        "write": "y",
+        "action": "LEFT"
+      },
+      {
+        "read": "1",
+        "to_state": "q5",
+        "write": "A",
+        "action": "RIGHT"
+      },
+      {
+        "read": "A",
+        "to_state": "q5",
+        "write": "1",
+        "action": "RIGHT"
+      }
+    ],
+    "q6": [
+      {
+        "read": "y",
+        "to_state": "q6",
+        "write": "y",
+        "action": "RIGHT"
+      },
+      {
+        "read": "0",
+        "to_state": "q3",
+        "write": "A",
+        "action": "LEFT"
+      },
+      {
+        "read": "1",
+        "to_state": "q6",
+        "write": "A",
+        "action": "RIGHT"
+      },
+      {
+        "read": "A",
+        "to_state": "q6",
+        "write": "1",
+        "action": "RIGHT"
+      }
+    ],
+    "q7": [
+      {
+        "read": "y",
+        "to_state": "q7",
+        "write": "0",
+        "action": "RIGHT"
+      },
+      {
+        "read": "0",
+        "to_state": "q6",
+        "write": "y",
+        "action": "RIGHT"
+      },
+      {
+        "read": "1",
+        "to_state": "q7",
+        "write": "1",
+        "action": "RIGHT"
+      },
+      {
+        "read": "A",
+        "to_state": "q2",
+        "write": "0",
+        "action": "RIGHT"
+      }
+    ]
+  }
+}
