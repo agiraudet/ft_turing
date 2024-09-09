@@ -1,6 +1,6 @@
 tm
 a.out
-*.cmi
-*.cmx
-*.o
+src/*.cmi
+src/*.cmx
+src/*.o
 tmp
