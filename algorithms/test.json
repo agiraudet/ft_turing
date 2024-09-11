@@ -1,0 +1,265 @@
+{
+  "name": "Robinson 7x4 UTM",
+  "alphabet": [
+    "0",
+    "a",
+    "b",
+    "c"
+  ],
+  "blank": "0",
+  "states": [
+    "T",
+    "U",
+    "V",
+    "W",
+    "X",
+    "Y",
+    "Z",
+    "HALT",
+    "INIT_A",
+    "INIT_B",
+    "INVALID_INPUT"
+  ],
+  "initial": "INIT_A",
+  "finals": [
+    "HALT",
+    "INVALID_INPUT"
+  ],
+  "transitions": {
+    "INVALID_INPUT": [],
+    "INIT_A": [
+      {
+        "read": "a",
+        "to_state": "INIT_A",
+        "write": "a",
+        "action": "RIGHT"
+      },
+      {
+        "read": "0",
+        "to_state": "INIT_A",
+        "write": "0",
+        "action": "RIGHT"
+      },
+      {
+        "read": "b",
+        "to_state": "INIT_B",
+        "write": "b",
+        "action": "LEFT"
+      },
+      {
+        "read": "c",
+        "to_state": "INIT_A",
+        "write": "c",
+        "action": "RIGHT"
+      }
+    ],
+    "INIT_B": [
+      {
+        "read": "a",
+        "to_state": "T",
+        "write": "a",
+        "action": "RIGHT"
+      },
+      {
+        "read": "0",
+        "to_state": "T",
+        "write": "0",
+        "action": "RIGHT"
+      },
+      {
+        "read": "b",
+        "to_state": "T",
+        "write": "b",
+        "action": "RIGHT"
+      },
+      {
+        "read": "c",
+        "to_state": "T",
+        "write": "c",
+        "action": "RIGHT"
+      }
+    ],
+    "T": [
+      {
+        "read": "0",
+        "to_state": "T",
+        "write": "0",
+        "action": "LEFT"
+      },
+      {
+        "read": "a",
+        "to_state": "T",
+        "write": "0",
+        "action": "LEFT"
+      },
+      {
+        "read": "b",
+        "to_state": "U",
+        "write": "b",
+        "action": "LEFT"
+      },
+      {
+        "read": "c",
+        "to_state": "HALT",
+        "write": "c",
+        "action": "LEFT"
+      }
+    ],
+    "U": [
+      {
+        "read": "0",
+        "to_state": "U",
+        "write": "a",
+        "action": "RIGHT"
+      },
+      {
+        "read": "a",
+        "to_state": "T",
+        "write": "0",
+        "action": "LEFT"
+      },
+      {
+        "read": "b",
+        "to_state": "U",
+        "write": "b",
+        "action": "RIGHT"
+      },
+      {
+        "read": "c",
+        "to_state": "V",
+        "write": "a",
+        "action": "LEFT"
+      }
+    ],
+    "V": [
+      {
+        "read": "0",
+        "to_state": "Z",
+        "write": "a",
+        "action": "RIGHT"
+      },
+      {
+        "read": "a",
+        "to_state": "V",
+        "write": "a",
+        "action": "LEFT"
+      },
+      {
+        "read": "b",
+        "to_state": "W",
+        "write": "b",
+        "action": "LEFT"
+      },
+      {
+        "read": "c",
+        "to_state": "V",
+        "write": "c",
+        "action": "LEFT"
+      }
+    ],
+    "W": [
+      {
+        "read": "0",
+        "to_state": "X",
+        "write": "a",
+        "action": "LEFT"
+      },
+      {
+        "read": "a",
+        "to_state": "V",
+        "write": "a",
+        "action": "LEFT"
+      },
+      {
+        "read": "b",
+        "to_state": "INVALID_INPUT",
+        "write": "b",
+        "action": "LEFT"
+      },
+      {
+        "read": "c",
+        "to_state": "INVALID_INPUT",
+        "write": "c",
+        "action": "LEFT"
+      }
+    ],
+    "X": [
+      {
+        "read": "0",
+        "to_state": "Y",
+        "write": "a",
+        "action": "RIGHT"
+      },
+      {
+        "read": "a",
+        "to_state": "X",
+        "write": "0",
+        "action": "RIGHT"
+      },
+      {
+        "read": "b",
+        "to_state": "X",
+        "write": "b",
+        "action": "RIGHT"
+      },
+      {
+        "read": "c",
+        "to_state": "T",
+        "write": "0",
+        "action": "RIGHT"
+      }
+    ],
+    "Y": [
+      {
+        "read": "0",
+        "to_state": "V",
+        "write": "c",
+        "action": "LEFT"
+      },
+      {
+        "read": "a",
+        "to_state": "Y",
+        "write": "a",
+        "action": "RIGHT"
+      },
+      {
+        "read": "b",
+        "to_state": "Y",
+        "write": "b",
+        "action": "RIGHT"
+      },
+      {
+        "read": "c",
+        "to_state": "Y",
+        "write": "c",
+        "action": "RIGHT"
+      }
+    ],
+    "Z": [
+      {
+        "read": "0",
+        "to_state": "V",
+        "write": "a",
+        "action": "LEFT"
+      },
+      {
+        "read": "a",
+        "to_state": "Z",
+        "write": "a",
+        "action": "RIGHT"
+      },
+      {
+        "read": "b",
+        "to_state": "Z",
+        "write": "b",
+        "action": "RIGHT"
+      },
+      {
+        "read": "c",
+        "to_state": "Y",
+        "write": "c",
+        "action": "RIGHT"
+      }
+    ]
+  }
+}

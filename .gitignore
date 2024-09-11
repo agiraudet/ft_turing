@@ -2,5 +2,7 @@ tm
 a.out
 src/*.cmi
 src/*.cmx
+src/*.cmo
 src/*.o
 tmp
+testing

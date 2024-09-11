@@ -1,0 +1,60 @@
+{
+  "name": "Wolfram's UTM",
+  "alphabet": [
+    "0",
+    "1",
+    "_"
+  ],
+  "blank": "0",
+  "states": [
+    "S1",
+    "S2",
+    "HALT"
+  ],
+  "initial": "S1",
+  "finals": [
+    "HALT"
+  ],
+  "transitions": {
+    "S1": [
+      {
+        "read": "_",
+        "to_state": "HALT",
+        "write": "_",
+        "action": "RIGHT"
+      },
+      {
+        "read": "0",
+        "to_state": "S1",
+        "write": "1",
+        "action": "RIGHT"
+      },
+      {
+        "read": "1",
+        "to_state": "S2",
+        "write": "1",
+        "action": "LEFT"
+      }
+    ],
+    "S2": [
+      {
+        "read": "_",
+        "to_state": "HALT",
+        "write": "_",
+        "action": "RIGHT"
+      },
+      {
+        "read": "0",
+        "to_state": "S1",
+        "write": "1",
+        "action": "LEFT"
+      },
+      {
+        "read": "1",
+        "to_state": "S2",
+        "write": "0",
+        "action": "RIGHT"
+      }
+    ]
+  }
+}

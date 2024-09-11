@@ -1,0 +1,85 @@
+{
+  "name": "not_utm",
+  "alphabet": [
+    "1",
+    "+",
+    "."
+  ],
+  "blank": ".",
+  "states": [
+    "write_1_go_left",
+    "write_1_go_right",
+    "write_blanck_go_left",
+    "write_blanck_go_right",
+    "read_1_find_state",
+    "read_plus_find_state",
+    "read_blanck_find_state",
+  ],
+  "initial": "find_add",
+  "finals": [
+    "too_many_inputs",
+    "HALT"
+  ],
+  "transitions": {
+    "find_add": [
+      {
+        "read": "1",
+        "to_state": "find_add",
+        "write": "1",
+        "action": "RIGHT"
+      },
+      {
+        "read": ".",
+        "to_state": "HALT",
+        "write": ".",
+        "action": "LEFT"
+      },
+      {
+        "read": "+",
+        "to_state": "find_last",
+        "write": "1",
+        "action": "RIGHT"
+      }
+    ],
+    "find_last": [
+      {
+        "read": ".",
+        "to_state": "del_one",
+        "write": ".",
+        "action": "LEFT"
+      },
+      {
+        "read": "1",
+        "to_state": "find_last",
+        "write": "1",
+        "action": "RIGHT"
+      },
+      {
+        "read": "+",
+        "to_state": "too_many_inputs",
+        "write": "+",
+        "action": "LEFT"
+      }
+    ],
+    "del_one": [
+      {
+        "read": ".",
+        "to_state": "del_one",
+        "write": ".",
+        "action": "LEFT"
+      },
+      {
+        "read": "1",
+        "to_state": "HALT",
+        "write": ".",
+        "action": "LEFT"
+      },
+      {
+        "read": "+",
+        "to_state": "del_one",
+        "write": ".",
+        "action": "LEFT"
+      }
+    ]
+  }
+}
