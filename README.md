@@ -111,11 +111,14 @@ Where the action is `new state - write - direction` and `.` is blank:
 | S |E0>|Hy>|
 | E |S0>|Hn>|
 
-## 3. Universal Turing Machine (UTM)
+## 3. Universal Turing Machine (UTM)... Or not ?
 
 The last exercise is to build a machine that can run another machine, given in an encoded form as input. This is precisely what a UTM is, and there is a **lot** of research on this topic, most of it is sadly not very digestible if you don't have some academic affinity.
+There is a rabbit hole to fell into here, and you have to make a choice: go the full universal way, or do just what is needed for the subject.
+After trying the first option for a while, I realized it was to time consuming without some previous academic knowledge on that subject to just get up-to-date.
+In case you feel like doing this anyway, here are some pointers I found along the way. Also, check the `docs` directory of this repo, that holds some paper with the answer in them.
 
-Since the subject from 42 tells us the specific (and only) algorithm that this "UTM" will have to run, a lot of shortcuts can be taken here. If you choose the hard way and decide to build an actual UTM, here are some of the steps you might want to follow:
+### UTMs
 
 1. Pick a UTM
    Researchers have discovered quite a few of them and proved them to be actually universal. There is a competition among them to find the simplest one, meaning the one with the fewest commands. They are usually described as *U(m,n)* where *U* is the UTM, *m* the number of states, and *n* the number of symbols in its alphabet.
@@ -139,4 +142,21 @@ Since the subject from 42 tells us the specific (and only) algorithm that this "
 
    It turns out, Minsky's U(7,4) UTM processes 2-tag systems. So, we have to take our list of quintuples describing the TM we want to encode, turn it into a 2-tag system, and feed that to the UTM. Easy, no?
 
-  ^^^ Now i'm doing this,and it is hard, and i still have to do the bonuses.
+Well, if you are familiar with mathematics, probably yes, and you will find a good state tabe for a U(7,4) machine with the encoding equation in Claudio Baiocchi paper, `Three Small Universal Turing Machines`.
+
+If however, you would rather go a creative but not really universal way, well you can come up with your own way o do stuff !
+
+### Not-UTMs, but a little ?
+
+What is asked by the subject is to make a machine that get fed the description of our unary addition machine and simulate it. It's up to us to find an encoding to represent its states, transitions, etc.
+So you will need to store on the tape : the description of the machine, its input tape, and some information regarding the current state mid-simulation.
+While there is a lot of way to go about that, you will face on problem. How to store and move information around ?
+For example, let's say you decide to store the description of the machine (meaning description of state and transitions) at the beginning of the tape, and the simulated tape at the right of it. You will need to read a character, and then figure out which state the machine is in to then lookup what to do next (what to write, where to move, etc).
+But how do you move around, and still remember the character you just read ?
+Well, the answer is states. A lot of them. After all states are a form a memory. Obviously, writing the description of that NUTM (Not Universal Turing Machine) by hand, would be very tedious, and so you are probably gonna want to generate it.
+So, we will need to :
+
+- figure out the algorithm for our NUTM
+- make up the encoding we want to use
+- write some code to generate the json file describing that.
+Lest proceed step by step here.
