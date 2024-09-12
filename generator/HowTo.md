@@ -47,3 +47,7 @@ We then just have to add our special beginning and end markers, concatenate all 
 Then, since the subject specify that blanks are not allowed in the input tape, we swap them for a placeholder, like `,`, that will get replaced buy actual blanks at the start of the machine execution.
 
 `$*A(1A1>(+B1>(,A,>#B(1B1>(+H+_(,C,<#C(1H,_(+C,<(,C,<#H|`
+
+# Executing
+
+At run time, the root machine will proceed like so

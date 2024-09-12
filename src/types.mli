@@ -1,3 +1,9 @@
+type color =
+  | Black | Red | Green | Yellow | Blue | Magenta | Cyan | White
+  | BrightBlack | BrightRed | BrightGreen | BrightYellow
+  | BrightBlue | BrightMagenta | BrightCyan | BrightWhite
+  | Default | Inverted | Reset
+
 type 'a tape = {
   left: 'a list;
   current: 'a;
@@ -29,3 +35,14 @@ type machine = {
   halting_state: string list;
 }
 
+type state_data = {
+  visits: int;
+  tape_positions: int list;
+}
+
+type complexity_estimate =
+  | Constant
+  | Linear
+  | Quadratic
+  | Exponential
+  | Infinite

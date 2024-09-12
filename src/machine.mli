@@ -13,3 +13,4 @@ val step : machine -> machine
 val examine : machine -> machine
 val check_bounds : machine -> machine
 val run : machine -> machine
+val run_and_analyze : machine -> machine

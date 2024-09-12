@@ -32,9 +32,9 @@ let print_tape tape =
   | u::v -> print_char u; print_lst v
   in
   print_lst @@ rev tape.left;
-  print_color tape.current;
+  print_color_char Inverted tape.current;
   print_lst tape.right;
-  print_char ' '
+  print_char '\n'
 
 let count c tape = 
   let add_t a b =

@@ -1,5 +1,6 @@
 open Types
 open Tape
+open Utils
 
 exception InfLoop of string
 exception NeverHalts of string
@@ -65,10 +66,19 @@ let step machine =
         tape = move (write machine.tape act.write) act.direction;
         state = act.to_state}
 
+
 let examine machine = 
+  let str = machine.state in
+  let max_len = List.fold_left (fun acc s -> max acc (String.length s)) 0 machine.state_list in
+  let padding = max_len - String.length str in
+  let left_pad = padding / 2 in
+  let right_pad = padding - left_pad in
+  Printf.printf "[%*s" left_pad "";
+  print_color_str Green str;
+  Printf.printf "%*s] " right_pad "";
   print_tape machine.tape;
-  print_endline machine.state; 
   machine
+
 
 let check_bounds machine = 
   (* if your current state, when reading a blank character, transition into the same state, 
@@ -93,7 +103,7 @@ let run machine =
   Since we wont run complex enough algo making this an issue in evaluation context, strict correctness is preferable here*)
   let rec aux machine prev_states =
     if List.mem machine.state machine.halting_state then
-      machine
+      examine machine
     else if List.mem machine prev_states then
       begin
       ignore @@ examine machine;
@@ -105,3 +115,62 @@ let run machine =
       aux (step (check_bounds (examine machine))) (machine::prev_states)
   in
   aux machine []
+
+let estimate_complexity (machines: machine list) : complexity_estimate * int * int * int * int =
+  let state_data = ref StringMap.empty in
+  let tape_length = ref 1 in
+  let steps = List.length machines - 1 in (* Subtract 1 to exclude initial state *)
+  let tape_position tape =
+    List.length tape.left
+  in
+  List.iteri (fun i m ->
+    let pos = tape_position m.tape in
+    tape_length := max !tape_length (pos + 1 + List.length m.tape.right);
+    let data = match StringMap.find_opt m.state !state_data with
+      | Some d -> { visits = d.visits + 1; tape_positions = pos :: d.tape_positions }
+      | None -> { visits = 1; tape_positions = [pos] }
+    in
+    state_data := StringMap.add m.state data !state_data
+  ) machines;
+  let max_visits = StringMap.fold (fun _ data acc -> max acc data.visits) !state_data 0 in
+  let unique_states = StringMap.cardinal !state_data in
+  let estimate = 
+    if steps > 1000000 then Infinite
+    else if max_visits > !tape_length * 2 then Exponential
+    else if max_visits > !tape_length then Quadratic
+    else if unique_states > !tape_length / 2 then Linear
+    else Constant
+  in
+  (estimate, steps, !tape_length, max_visits, unique_states)
+
+let complexity_to_string = function
+  | Constant -> "O(1)"
+  | Linear -> "O(n)"
+  | Quadratic -> "O(n^2)"
+  | Exponential -> "O(2^n)"
+  | Infinite -> "Potentially infinite"
+
+let run_and_analyze machine =
+  let rec aux machine nstep prev_states =
+    if List.mem machine.state machine.halting_state then
+      (List.rev ((examine machine):: prev_states), nstep)
+    else if List.mem machine prev_states then
+      begin
+      ignore @@ examine machine;
+      raise (InfLoop ("This exact state happened before, the machine will loop forever"));
+      end
+    else if count machine.tape.blank machine.tape > 50 then
+      raise (InfLoop ("The halting problem tells us we cannot be sure, but this machine looks awfully like it's looping forever"))
+    else
+      aux (step (check_bounds (examine machine))) (nstep+1) (machine :: prev_states)
+  in
+  let (machine_states, steps) = aux machine 0 [] in
+  let (complexity, steps, tape_length, max_visits, unique_states) = estimate_complexity machine_states in
+  print_color_str BrightCyan (mk_string ((String.length machine.name) + 6) "═");
+  print_newline ();
+  Printf.printf "%sEstimated time complexity:%s %s\n" (ansi_of_color BrightCyan) (ansi_of_color Reset) (complexity_to_string complexity);
+  Printf.printf "%sTotal steps:%s %d\n" (ansi_of_color BrightCyan) (ansi_of_color Reset) steps;
+  Printf.printf "%sMaximum tape length:%s %d\n" (ansi_of_color BrightCyan) (ansi_of_color Reset) tape_length;
+  Printf.printf "%sMaximum visits to a single state:%s %d\n" (ansi_of_color BrightCyan) (ansi_of_color Reset) max_visits;
+  Printf.printf "%sNumber of unique states visited:%s %d\n" (ansi_of_color BrightCyan) (ansi_of_color Reset) unique_states;
+  List.hd @@ List.rev machine_states
