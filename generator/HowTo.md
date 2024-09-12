@@ -28,8 +28,8 @@ with alphabet `{1, +, .}` for the simulated machine, where `.` is blank.
 |   | 1 | + | . |
 |---|---|---|---|
 | A |A1>|B1>|A.>|
-| B |B1>|H+<|C.<|
-| C |H.<|C.<|C.<|
+| B |B1>|H+_|C.<|
+| C |H._|C.<|C.<|
 
 With the rules given earlier, we can encode our state table like so :
 
@@ -37,6 +37,13 @@ With the rules given earlier, we can encode our state table like so :
 - `#B(1B1>(+H+<(.C.<`
 - `#C(1H.<(+C.<(.C.<`
 
+For halting, we use few special symbols. As you can see from the state table, we have an H state, and we signify that it is a halting one be swapping the direction for `_`.
+If we stop as soon as the H state was marked, we would miss the last write operation.
+
 We then just have to add our special beginning and end markers, concatenate all the descriptions, and set our initial state.
 
-`$*A(1A1>(+B1>(.A.>#B(1B1>(+H+<(.C.<#C(1H.<(+C.<(.C.<|...`
+`$*A(1A1>(+B1>(.A.>#B(1B1>(+H+_(.C.<#C(1H._(+C.<(.C.<#H|`
+
+Then, since the subject specify that blanks are not allowed in the input tape, we swap them for a placeholder, like `,`, that will get replaced buy actual blanks at the start of the machine execution.
+
+`$*A(1A1>(+B1>(,A,>#B(1B1>(+H+_(,C,<#C(1H,_(+C,<(,C,<#H|`

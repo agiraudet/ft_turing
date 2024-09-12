@@ -43,7 +43,9 @@ let validate_halt machine =
 
 let validate_input machine = 
   let check_char c =
-    if not (List.mem c machine.alphabet) then
+    if c = machine.tape.blank then
+      raise (InvalidInput ("No blanks are allowed on the input tape"))
+    else if not (List.mem c machine.alphabet) then
       raise (InvalidInput (String.make 1 c ^ " is outside of alphabet"))
   in
   List.iter check_char machine.tape.right;
@@ -97,6 +99,8 @@ let run machine =
       ignore @@ examine machine;
       raise (InfLoop ("This exact state happened before, the machine will loop forever"));
       end
+    else if count machine.tape.blank machine.tape > 50 then
+      raise (InfLoop ("The halting problem tells us we cannot be sure, but this machine looks awfully likes its looping forever"))
     else
       aux (step (check_bounds (examine machine))) (machine::prev_states)
   in

@@ -17,6 +17,7 @@ type sc_alphabet = {
   halt: char;
   input: char;
   blank: char;
+  mkrblank: char;
 }
 
 type alphabet = {
@@ -43,11 +44,11 @@ let w_c_ alphabet =
         to_state = state_name ^ string_of_char u;
         write = string_of_char u;
         direction = "RIGHT" }::acc) v
-    in make_statedef state_name @@ aux [] [alphabet.sc.left;alphabet.sc.right]
+    in make_statedef state_name @@ aux [] [alphabet.sc.left;alphabet.sc.right;alphabet.sc.halt]
   in List.map build alphabet.basics
 
 let w_c_d alphabet = 
-  let build d alphabet c = 
+  let build d alphabet next_state c = 
     let state_name = "w_" ^ string_of_char c ^ "_" ^ string_of_char d in
     let rec aux acc = function
       | [] -> acc
@@ -60,14 +61,14 @@ let w_c_d alphabet =
         direction = "RIGHT"}
       else
         {read = string_of_char alphabet.sc.placeholder;
-        to_state = "r_?";
+        to_state = next_state;
         write = string_of_char c;
         direction = string_of_dir alphabet d}
       in aux (e::acc) v
     in make_statedef state_name @@ aux [] alphabet.full
-  in List.map (build alphabet.sc.left alphabet) alphabet.basics
-  @ List.map (build alphabet.sc.right alphabet) alphabet.basics
-  @ List.map (build alphabet.sc.halt alphabet) alphabet.basics
+  in List.map (build alphabet.sc.left alphabet ("r_" ^ string_of_char alphabet.sc.placeholder)) alphabet.basics
+  @ List.map (build alphabet.sc.right alphabet ("r_" ^ string_of_char  alphabet.sc.placeholder)) alphabet.basics
+  @ List.map (build alphabet.sc.halt alphabet "HALT") alphabet.basics
 
 let r_c_gt_curstate alphabet =
   let build alphabet c =
@@ -285,15 +286,20 @@ let gt_input alphabet =
     | [] -> acc
     | u::v ->
     let e =
-    if u <> alphabet.sc.input then
+    if u = alphabet.sc.mkrblank then
       {read = string_of_char u;
       to_state = state_name;
-      write = string_of_char u;
+      write = string_of_char alphabet.sc.blank;
       direction = "RIGHT";}
-    else
+    else if u = alphabet.sc.input then
       {read = string_of_char alphabet.sc.input;
       to_state = "r_" ^ string_of_char alphabet.sc.placeholder;
       write = string_of_char alphabet.sc.input;
+      direction = "RIGHT";}
+    else
+      {read = string_of_char u;
+      to_state = state_name;
+      write = string_of_char u;
       direction = "RIGHT";}
     in aux (e::acc) v
   in [make_statedef state_name @@ aux [] alphabet.full]
@@ -392,12 +398,13 @@ let default_alphabet =
     halt = '_';
     blank = '.';
     input = '|';
+    mkrblank = ','
   } in
   {
     states = ['A';'B';'C';'H'];
     basics = ['1';'+';'.'];
     sc = sc;
-    full = ['A';'B';'C';'H';'1';'+';'.';'?';'*';'#';'(';'[';'$';'<';'>';'|';'_']
+    full = ['A';'B';'C';'H';'1';'+';'.';'?';'*';'#';'(';'[';'$';'<';'>';'|';'_';',']
   }
 
 open Yojson.Basic
@@ -418,10 +425,10 @@ let extract_state_names (state_defs: state_def list) : string list =
 
 let compose_json (state_defs: state_def list) json_name alphabet: Yojson.Basic.t =
   let transitions = `Assoc (List.map state_def_to_json state_defs) in
-  let states = `List (List.map (fun s -> `String s) (extract_state_names state_defs)) in
+  let states = `List ((`String "HALT")::(List.map (fun s -> `String s) (extract_state_names state_defs))) in
   let name = `String json_name in
   let alp = `List (List.map (fun c -> `String (string_of_char c)) alphabet.full) in
-  let finals = `List (List.map (fun s -> `String s) ["set_state_H"]) in
+  let finals = `List (List.map (fun s -> `String s) ["HALT"]) in
   `Assoc [
     ("name", name);
     ("alphabet", alp);

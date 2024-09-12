@@ -35,3 +35,23 @@ let print_tape tape =
   print_color tape.current;
   print_lst tape.right;
   print_char ' '
+
+let count c tape = 
+  let add_t a b =
+    let (a1, a2) = a in
+    let (b1, b2) = b in
+    (a1+b1, a2+b2)
+  in
+  let rec acc n t = function
+  | [] -> (n, t)
+  | u::v ->
+  if u = c then
+    acc (n+1) (t+1) v
+  else
+    acc n (t+1) v
+  in
+  let (nc, nt) = add_t (acc 0 0 tape.right) (acc 0 0 tape.left) in
+  if nt > 10 then
+    nc * 100 / nt
+  else
+    0
