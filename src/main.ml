@@ -46,26 +46,45 @@ let introduce machine =
   machine
 
 let print_error e msg = 
-  Printf.eprintf "%s%s:%s %s\n" (ansi_of_color RED) e (ansi_of_color RESET) msg;
-  exit 1;
+  Printf.eprintf "%s%s:%s %s\n" (ansi_of_color Red) e (ansi_of_color Reset) msg;
+  exit 1
 
 let () =
-  if Array.length Sys.argv <> 3 then
-    begin
-    Printf.printf "Usage: %s <file.json> <tape_input>\n" Sys.argv.(0);
-    exit 1
-    end
-  else try
-    let show_bigO = false in
-    let machine = introduce @@ validate @@ machine_of_json_file Sys.argv.(1) Sys.argv.(2) in
-    if show_bigO then
-      ignore @@ run_and_analyze machine
+  let input_file = ref "" in
+  let tape_input = ref "" in
+  let show_bigO = ref false in
+  let spec_list = [
+    ("-b", Arg.Set show_bigO, "Enable bonus feature (show Big O analysis)");
+    ("--bonus", Arg.Set show_bigO, "Enable bonus feature (show Big O analysis)");
+  ] in
+  let usage_msg = "Usage: " ^ Sys.argv.(0) ^ " <file.json> <tape_input> [-b|--bonus]" in
+  Arg.parse spec_list (fun arg ->
+    if !input_file = "" then
+      input_file := arg
+    else if !tape_input = "" then
+      tape_input := arg
     else
-      ignore @@ run machine
-  with
-    | Sys_error msg -> print_error "Please check your inpupts"  msg;
-    | JsonError msg -> print_error "Ill formated JSON file"  msg;
-    | Yojson.Json_error msg -> print_error "JSON Structure Error" msg;
-    | NeverHalts msg | InvalidState msg -> print_error "Invalid Machine"  msg;
-    | InfLoop msg -> print_error "Execution error"  msg;
-    | InvalidInput msg -> print_error "Input error" msg;
+      raise (Arg.Bad "Too many arguments")
+  ) usage_msg;
+  if !input_file = "" || !tape_input = "" then
+    begin
+      Printf.eprintf "%s%s:%s %s\n" (ansi_of_color Red) "Error" (ansi_of_color Reset) "Missing arguments";
+      Arg.usage spec_list usage_msg;
+      exit 1
+    end
+  else
+    try
+    begin
+      let machine = introduce @@ validate @@ machine_of_json_file !input_file !tape_input in
+      if !show_bigO then
+        ignore @@ run_and_analyze machine
+      else
+        ignore @@ run machine
+    end
+    with
+      | Sys_error msg -> print_error "Please check your inputs" msg
+      | JsonError msg -> print_error "Ill formatted JSON file" msg
+      | Yojson.Json_error msg -> print_error "JSON Structure Error" msg
+      | NeverHalts msg | InvalidState msg -> print_error "Invalid Machine" msg
+      | InfLoop msg -> print_error "Execution error" msg
+      | InvalidInput msg -> print_error "Input error" msg

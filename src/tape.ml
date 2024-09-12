@@ -50,8 +50,11 @@ let count c tape =
   else
     acc n (t+1) v
   in
-  let (nc, nt) = add_t (acc 0 0 tape.right) (acc 0 0 tape.left) in
+  let cur = ((if tape.current = c then 1 else 0), 1) in
+  let (nc, nt) = add_t cur (acc 0 0 (tape.right@tape.left)) in
   if nt > 10 then
+    begin
     nc * 100 / nt
+      end
   else
     0

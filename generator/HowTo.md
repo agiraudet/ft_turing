@@ -50,4 +50,12 @@ Then, since the subject specify that blanks are not allowed in the input tape, w
 
 # Executing
 
-At run time, the root machine will proceed like so
+At run time, the root machine will proceed like so:
+  1. We start by moving to find the input tape and read the first character. On the way, we substitute blank placeholders for actual blanks.
+  2. We replace the read character by a `?`, that marks our simulated machine head. We remember that character via a state.
+  3. We find our current state, by going left until we find the `*` marker. We then unmark that state, swapping `*` for our regular state marker `#`. We are going to switch state anyway.
+  4. Next, we move right, checking every transition description `(` to find the one matching what we read. We mark that with `[`
+  5. We can now read our next state, and mark it as well.
+  6. We go back to our marked transition, unmark it, and memorise what to read and which direction to go via a state.
+  7. We find our `?`, and proceed with the writing and moving.
+  8. we go back to step 2

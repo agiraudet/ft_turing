@@ -109,7 +109,7 @@ let run machine =
       ignore @@ examine machine;
       raise (InfLoop ("This exact state happened before, the machine will loop forever"));
       end
-    else if count machine.tape.blank machine.tape > 50 then
+    else if ((not @@ List.is_empty prev_states) && (List.length (machine.tape.left@machine.tape.right) > List.length (let old = List.hd prev_states in old.tape.left@old.tape.right)) && (count machine.tape.blank machine.tape) > 75) then
       raise (InfLoop ("The halting problem tells us we cannot be sure, but this machine looks awfully likes its looping forever"))
     else
       aux (step (check_bounds (examine machine))) (machine::prev_states)
@@ -159,7 +159,7 @@ let run_and_analyze machine =
       ignore @@ examine machine;
       raise (InfLoop ("This exact state happened before, the machine will loop forever"));
       end
-    else if count machine.tape.blank machine.tape > 50 then
+    else if ((not @@ List.is_empty prev_states) && (List.length (machine.tape.left@machine.tape.right) > List.length (let old = List.hd prev_states in old.tape.left@old.tape.right)) && (count machine.tape.blank machine.tape) > 75) then
       raise (InfLoop ("The halting problem tells us we cannot be sure, but this machine looks awfully like it's looping forever"))
     else
       aux (step (check_bounds (examine machine))) (nstep+1) (machine :: prev_states)
@@ -168,7 +168,7 @@ let run_and_analyze machine =
   let (complexity, steps, tape_length, max_visits, unique_states) = estimate_complexity machine_states in
   print_color_str BrightCyan (mk_string ((String.length machine.name) + 6) "═");
   print_newline ();
-  Printf.printf "%sEstimated time complexity:%s %s\n" (ansi_of_color BrightCyan) (ansi_of_color Reset) (complexity_to_string complexity);
+  Printf.printf "%sTime complexity:%s %s\n" (ansi_of_color BrightCyan) (ansi_of_color Reset) (complexity_to_string complexity);
   Printf.printf "%sTotal steps:%s %d\n" (ansi_of_color BrightCyan) (ansi_of_color Reset) steps;
   Printf.printf "%sMaximum tape length:%s %d\n" (ansi_of_color BrightCyan) (ansi_of_color Reset) tape_length;
   Printf.printf "%sMaximum visits to a single state:%s %d\n" (ansi_of_color BrightCyan) (ansi_of_color Reset) max_visits;

@@ -77,7 +77,12 @@ let r_c_gt_curstate alphabet =
       | [] -> acc
       | u::v ->
       let e = 
-      if u <> alphabet.sc.curstate then
+      if u = alphabet.sc.init then
+        {read = string_of_char u;
+        to_state = "NO_ACTIVE_STATE";
+        write = string_of_char u;
+        direction = "LEFT"}
+      else if u <> alphabet.sc.curstate then
         {read = string_of_char u;
         to_state = state_name;
         write = string_of_char u;
@@ -98,7 +103,12 @@ let r_c_gt_transi alphabet =
       | [] -> acc
       | u::v ->
       let e = 
-      if u <> alphabet.sc.transi then
+      if u = alphabet.sc.input || u = alphabet.sc.nopstate then
+        {read = string_of_char u;
+        to_state = "NO_GOOD_TRANSI";
+        write = string_of_char u;
+        direction = "RIGHT"}
+      else if u <> alphabet.sc.transi then
         {read = string_of_char u;
         to_state = state_name;
         write = string_of_char u;
@@ -192,11 +202,16 @@ let set_state_c alphabet =
       | [] -> acc
       | u::v ->
       let e = 
-      if u <> alphabet.sc.nopstate && u <> alphabet.sc.curstate then
+      if u = alphabet.sc.input then
         {read = string_of_char u;
-      to_state = state_name;
-      write = string_of_char u;
-      direction = "RIGHT"}
+        to_state = "NO_SUCH_STATE";
+        write = string_of_char u;
+        direction = "RIGHT"}
+      else if u <> alphabet.sc.nopstate && u <> alphabet.sc.curstate then
+        {read = string_of_char u;
+        to_state = state_name;
+        write = string_of_char u;
+        direction = "RIGHT"}
       else
         {read = string_of_char u;
         to_state = "ck_state_" ^ string_of_char c;
@@ -424,11 +439,12 @@ let extract_state_names (state_defs: state_def list) : string list =
   List.map fst state_defs
 
 let compose_json (state_defs: state_def list) json_name alphabet: Yojson.Basic.t =
+  let finals_states = ["HALT"; "NO_SUCH_STATE"; "NO_ACTIVE_STATE";  "NO_GOOD_TRANSI"] in
   let transitions = `Assoc (List.map state_def_to_json state_defs) in
-  let states = `List ((`String "HALT")::(List.map (fun s -> `String s) (extract_state_names state_defs))) in
+  let states = `List ((List.map (fun s -> `String s) ((extract_state_names state_defs)@finals_states))) in
   let name = `String json_name in
   let alp = `List (List.map (fun c -> `String (string_of_char c)) alphabet.full) in
-  let finals = `List (List.map (fun s -> `String s) ["HALT"]) in
+  let finals = `List (List.map (fun s -> `String s) finals_states) in
   `Assoc [
     ("name", name);
     ("alphabet", alp);
@@ -445,4 +461,4 @@ let write_json alphabet json_name =
   Yojson.Basic.to_file (json_name ^ ".json") json
 
 let () =
-  write_json default_alphabet "test"
+  write_json default_alphabet "not_really_but_almost_universal_turing_machine"

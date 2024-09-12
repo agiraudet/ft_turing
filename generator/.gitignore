@@ -1,4 +1,4 @@
-test.json
+*.json
 rules
 rules.o
 rules.cmi
