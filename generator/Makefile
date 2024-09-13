@@ -1,4 +1,4 @@
-NAME				= tm
+NAME				= generator
 SRC_DIR			=	src
 
 # OCaml compiler and flags
@@ -7,19 +7,8 @@ OCAMLOPT 		=	ocamlfind ocamlopt
 FLAGS 			=	-package yojson -linkpkg -I $(SRC_DIR)
 
 # Source files
-ML_FILES 		=	types.ml \
-							utils.ml \
-							tape.ml \
-							machine.ml \
-							parser.ml \
-							main.ml
-
-MLI_FILES		=	types.mli \
-							utils.mli \
-							tape.mli \
-							machine.mli \
-							parser.mli
-
+ML_FILES 		=	rules.ml
+MLI_FILES		=	rules.mli
 ML_SRC			=	$(addprefix $(SRC_DIR)/, $(ML_FILES))
 MLI_SRC			=	$(addprefix $(SRC_DIR)/, $(MLO_FILES))
 

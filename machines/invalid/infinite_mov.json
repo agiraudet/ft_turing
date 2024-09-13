@@ -1,0 +1,41 @@
+{
+  "name": "infinite_mov",
+  "alphabet": [
+    "0",
+    "y",
+    "n",
+    "."
+  ],
+  "blank": ".",
+  "states": [
+    "first_zero",
+    "second_zero",
+    "HALT"
+  ],
+  "initial": "first_zero",
+  "finals": [
+    "HALT"
+  ],
+  "transitions": {
+    "first_zero": [
+      {
+        "read": "0",
+        "to_state": "first_zero",
+        "write": "0",
+        "action": "RIGHT"
+      },
+      {
+        "read": ".",
+        "to_state": "first_zero",
+        "write": ".",
+        "action": "RIGHT"
+      },
+      {
+        "read": "n",
+        "to_state": "HALT",
+        "write": ".",
+        "action": "RIGHT"
+      }
+    ]
+  }
+}

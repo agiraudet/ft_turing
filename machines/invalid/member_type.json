@@ -1,5 +1,5 @@
 {
-  "name": "o2n",
+  "name": "member_type",
   "alphabet": [
     "0",
     "y",
@@ -13,9 +13,7 @@
     "HALT"
   ],
   "initial": "first_zero",
-  "finals": [
-    "HALT"
-  ],
+  "finals": "HALT",
   "transitions": {
     "first_zero": [
       {
@@ -36,7 +34,7 @@
         "read": "0",
         "to_state": "first_zero",
         "write": "0",
-        "action": "LEFT"
+        "action": "RIGHT"
       },
       {
         "read": ".",

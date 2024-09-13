@@ -1,5 +1,5 @@
 {
-  "name": "o2n",
+  "name": "infinite_loop",
   "alphabet": [
     "0",
     "y",
@@ -20,21 +20,29 @@
     "first_zero": [
       {
         "read": "0",
-        "to_state": "first_zero",
+        "to_state": "second_zero",
         "write": "0",
         "action": "RIGHT"
       },
       {
         "read": ".",
+        "to_state": "HALT",
+        "write": "y",
+        "action": "LEFT"
+      }
+    ],
+    "second_zero": [
+      {
+        "read": "0",
         "to_state": "first_zero",
-        "write": ".",
-        "action": "RIGHT"
+        "write": "0",
+        "action": "LEFT"
       },
       {
-        "read": "1",
+        "read": ".",
         "to_state": "HALT",
-        "write": ".",
-        "action": "RIGHT"
+        "write": "n",
+        "action": "LEFT"
       }
     ]
   }

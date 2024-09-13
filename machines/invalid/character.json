@@ -1,5 +1,5 @@
 {
-  "name": "mov",
+  "name": "character",
   "alphabet": [
     "0",
     "1",
@@ -54,7 +54,7 @@
         "action": "LEFT"
       },
       {
-        "read": "-",
+        "read": "z",
         "to_state": "HALT",
         "write": ".",
         "action": "LEFT"
