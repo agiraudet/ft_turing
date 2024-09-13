@@ -4,6 +4,11 @@ type color =
   | BrightBlue | BrightMagenta | BrightCyan | BrightWhite
   | Default | Inverted | Reset
 
+exception InfLoop of string
+exception NeverHalts of string
+exception InvalidState of string
+exception InvalidInput of string
+
 type 'a tape = {
   left: 'a list;
   current: 'a;

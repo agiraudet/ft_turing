@@ -49,24 +49,64 @@ let print_error e msg =
   Printf.eprintf "%s%s:%s %s\n" (ansi_of_color Red) e (ansi_of_color Reset) msg;
   exit 1
 
+(* let () = *)
+(*   let input_file = ref "" in *)
+(*   let tape_input = ref "" in *)
+(*   let show_bigO = ref false in *)
+(*   let spec_list = [ *)
+(*     ("-b", Arg.Set show_bigO, "Enable bonus feature (show Big O analysis)"); *)
+(*     ("--bonus", Arg.Set show_bigO, "Enable bonus feature (show Big O analysis)"); *)
+(*   ] in *)
+(*   let usage_msg = "Usage: " ^ Sys.argv.(0) ^ " <file.json> <tape_input> [-b|--bonus]" in *)
+(*   Arg.parse spec_list (fun arg -> *)
+(*     if !input_file = "" then *)
+(*       input_file := arg *)
+(*     else if !tape_input = "" then *)
+(*       tape_input := arg *)
+(*     else *)
+(*       raise (Arg.Bad "Too many arguments") *)
+(*   ) usage_msg; *)
+(*   if !input_file = "" || !tape_input = "" then *)
+(*     begin *)
+(*       Printf.eprintf "%s%s:%s %s\n" (ansi_of_color Red) "Error" (ansi_of_color Reset) "Missing arguments"; *)
+(*       Arg.usage spec_list usage_msg; *)
+(*       exit 1 *)
+(*     end *)
+(*   else *)
+(*     try *)
+(*     begin *)
+(*       let machine = introduce @@ validate @@ machine_of_json_file !input_file !tape_input in *)
+(*       if !show_bigO then *)
+(*         ignore @@ run_and_analyze machine *)
+(*       else *)
+(*         ignore @@ run machine *)
+(*     end *)
+(*     with *)
+(*       | Sys_error msg -> print_error "Please check your inputs" msg *)
+(*       | JsonError msg -> print_error "Ill formatted JSON file" msg *)
+(*       | Yojson.Json_error msg -> print_error "JSON Structure Error" msg *)
+(*       | NeverHalts msg | InvalidState msg -> print_error "Invalid Machine" msg *)
+(*       | InfLoop msg -> print_error "Execution error" msg *)
+(*       | InvalidInput msg -> print_error "Input error" msg *)
+
 let () =
   let input_file = ref "" in
-  let tape_input = ref "" in
+  let tape_input = ref None in
   let show_bigO = ref false in
   let spec_list = [
     ("-b", Arg.Set show_bigO, "Enable bonus feature (show Big O analysis)");
     ("--bonus", Arg.Set show_bigO, "Enable bonus feature (show Big O analysis)");
   ] in
   let usage_msg = "Usage: " ^ Sys.argv.(0) ^ " <file.json> <tape_input> [-b|--bonus]" in
+  let arg_counter = ref 0 in
   Arg.parse spec_list (fun arg ->
-    if !input_file = "" then
-      input_file := arg
-    else if !tape_input = "" then
-      tape_input := arg
-    else
-      raise (Arg.Bad "Too many arguments")
+    incr arg_counter;
+    match !arg_counter with
+    | 1 -> input_file := arg
+    | 2 -> tape_input := Some (if arg = "" then "" else arg)
+    | _ -> raise (Arg.Bad "Too many arguments")
   ) usage_msg;
-  if !input_file = "" || !tape_input = "" then
+  if !input_file = "" || !tape_input = None then
     begin
       Printf.eprintf "%s%s:%s %s\n" (ansi_of_color Red) "Error" (ansi_of_color Reset) "Missing arguments";
       Arg.usage spec_list usage_msg;
@@ -74,17 +114,17 @@ let () =
     end
   else
     try
-    begin
-      let machine = introduce @@ validate @@ machine_of_json_file !input_file !tape_input in
+      begin
+      let machine = introduce @@ validate @@ machine_of_json_file !input_file (Option.get !tape_input) in
       if !show_bigO then
         ignore @@ run_and_analyze machine
       else
         ignore @@ run machine
-    end
+      end
     with
-      | Sys_error msg -> print_error "Please check your inputs" msg
-      | JsonError msg -> print_error "Ill formatted JSON file" msg
-      | Yojson.Json_error msg -> print_error "JSON Structure Error" msg
-      | NeverHalts msg | InvalidState msg -> print_error "Invalid Machine" msg
-      | InfLoop msg -> print_error "Execution error" msg
-      | InvalidInput msg -> print_error "Input error" msg
+    | Sys_error msg -> print_error "Please check your inputs" msg
+    | JsonError msg -> print_error "Ill formatted JSON file" msg
+    | Yojson.Json_error msg -> print_error "JSON Structure Error" msg
+    | NeverHalts msg | InvalidState msg -> print_error "Invalid Machine" msg
+    | InfLoop msg -> print_error "Execution error" msg
+    | InvalidInput msg -> print_error "Input error" msg

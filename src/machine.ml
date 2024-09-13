@@ -2,11 +2,6 @@ open Types
 open Tape
 open Utils
 
-exception InfLoop of string
-exception NeverHalts of string
-exception InvalidState of string
-exception InvalidInput of string
-
 module StringSet = Set.Make(String)
 
 let validate_states machine =
@@ -44,10 +39,10 @@ let validate_halt machine =
 
 let validate_input machine = 
   let check_char c =
-    if c = machine.tape.blank then
-      raise (InvalidInput ("No blanks are allowed on the input tape"))
-    else if not (List.mem c machine.alphabet) then
-      raise (InvalidInput (String.make 1 c ^ " is outside of alphabet"))
+    (* if c = machine.tape.blank then *)
+    (*   raise (InvalidInput ("No blanks are allowed on the input tape")) *)
+    if not (List.mem c machine.alphabet) then
+      raise (InvalidInput ("'" ^ String.make 1 c ^ "' is outside of alphabet"))
   in
   List.iter check_char machine.tape.right;
   check_char machine.tape.current;
@@ -136,6 +131,7 @@ let estimate_complexity (machines: machine list) : complexity_estimate * int * i
   let unique_states = StringMap.cardinal !state_data in
   let estimate = 
     if steps > 1000000 then Infinite
+    else if steps > !tape_length - 2 && steps < !tape_length + 2 then Linear
     else if max_visits > !tape_length * 2 then Exponential
     else if max_visits > !tape_length then Quadratic
     else if unique_states > !tape_length / 2 then Linear

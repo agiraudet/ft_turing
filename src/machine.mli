@@ -1,10 +1,5 @@
 open Types
 
-exception InfLoop of string
-exception NeverHalts of string
-exception InvalidState of string
-exception InvalidInput of string
-
 val validate_states : machine -> machine
 val validate_halt : machine -> machine
 val validate_input : machine -> machine

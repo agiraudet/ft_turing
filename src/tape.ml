@@ -6,7 +6,13 @@ let make_tape blank = function
   | u::v -> {left = []; current = u; blank = blank; right = v}
 
 let tape_of_str blank str = 
-  make_tape blank @@ charlist_of_string str
+  let check_char c =
+    if c = blank then
+      raise (InvalidInput ("No blanks are allowed on the input tape"))
+  in
+  let chr_lst = charlist_of_string str in 
+  List.iter check_char chr_lst;
+  make_tape blank chr_lst
 
 let write tape c = 
   { tape with current = c}
