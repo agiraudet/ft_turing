@@ -18,7 +18,7 @@
 
 This project, is all about Turing Machines. Go to Wikipedia for a proper definition, but basically, a Turing Machine is a machine that :
 
-- Has a **infinite** loop made of cells.
+- Has a **infinite** tape made of cells.
 - Has a head that can move one cell at a time, and read and write to it.
 - Has a "current state"
 - Has a "book" that list, for each you might be in, what to do, for each character you can read. By what to "do", I mean: what to write back to that cell, which direction to move to after, and which state to transition to.
