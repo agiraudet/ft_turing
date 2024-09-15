@@ -21,20 +21,20 @@ This project, is all about Turing Machines. Go to Wikipedia for a proper definit
 - Has a **infinite** tape made of cells.
 - Has a head that can move one cell at a time, and read and write to it.
 - Has a "current state"
-- Has a "book" that list, for each you might be in, what to do, for each character you can read. By what to "do", I mean: what to write back to that cell, which direction to move to after, and which state to transition to.
+- Has a "book" that list what to do for each states you might be in, depending what character you read. By what to "do", I mean: what to write back to that cell, which direction to move to after, and which state to transition to.
 
-Turns out, this a mathematical model that define what is "computable" by wether it can compute it or not according to mathematicians. And it can simulate any computation ever.
+Turns out, a TM is a mathematical model that define what is "computable" by wether it can compute it or not according to mathematicians. And it can simulate any computation ever.
 
 ## Project Components
 
-This project is composed of three major parts:
+This project is composed of four major parts:
 
 1. Writing an OCaml Turing Machine (TM) emulator
 2. Programming some small algorithms for it (or, TM descriptions)
 3. Programming a TM that can run another TM
 4. Computing time complexity of TMs
 
-The last part is particularly interesting (and potentially quite tricky).
+The third part is particularly interesting (and potentially quite tricky).
 
 ## OCaml TM Emulator
 
@@ -143,7 +143,7 @@ Where the action is `new state - write - direction` and `.` is blank:
 
 The last exercise is to build a machine that can run another machine, given in an encoded form as input. This is precisely what a UTM is, and there is a **lot** of research on this topic, most of it is sadly not very digestible if you don't have some academic affinity.
 There is a rabbit hole to fell into here, and you have to make a choice: go the full universal way, or do just what is needed for the subject.
-After trying the first option for a while, I realized it was to time consuming without some previous academic knowledge on that subject to just get up-to-date.
+After trying the first option for a while, I realized it was too time consuming without some previous academic knowledge on that subject to just get up-to-date.
 In case you feel like doing this anyway, here are some pointers I found along the way. Also, check the `docs` directory of this repo, that holds some paper with the answer in them.
 
 ### UTMs
@@ -181,7 +181,7 @@ So you will need to store on the tape : the description of the machine, its inpu
 While there is a lot of way to go about that, you will face on problem. How to store and move information around ?
 For example, let's say you decide to store the description of the machine (meaning description of state and transitions) at the beginning of the tape, and the simulated tape at the right of it. You will need to read a character, and then figure out which state the machine is in to then lookup what to do next (what to write, where to move, etc).
 But how do you move around, and still remember the character you just read ?
-Well, the answer is states. A lot of them. After all states are a form a memory. Obviously, writing the description of that NUTM (Not Universal Turing Machine) by hand, would be very tedious, and so you are probably gonna want to generate it.
+Well, the answer is states. A lot of them. After all, states are a form a memory. Obviously, writing the description of that NUTM (Not Universal Turing Machine) by hand, would be very tedious, and so you are probably gonna want to generate it.
 So, we will need to :
 
 - figure out the algorithm for our NUTM
